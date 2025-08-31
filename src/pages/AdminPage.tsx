@@ -11,6 +11,7 @@ import TeamManagement from '@/components/admin/TeamManagement'
 import Analysis from '@/components/admin/Analysis'
 import EquipmentPartner from '@/components/admin/EquipmentPartner'
 import Operator from '@/components/admin/Operator'
+import CreateOperator from '@/components/admin/CreateOperator'
 
 interface AdminPageProps {
   userType: 'admin' | 'operator'
@@ -40,6 +41,8 @@ const AdminPage: React.FC<AdminPageProps> = ({
         return <EquipmentPartner />
       case 'operator':
         return userType === 'admin' ? <Operator /> : <Dashboard />
+      case 'createOperator':
+        return userType === 'admin' ? <CreateOperator /> : <Dashboard />
       default:
         return <Dashboard />
     }

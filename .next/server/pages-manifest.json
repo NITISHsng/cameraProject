@@ -1,0 +1,13 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/AdminPage": "pages/AdminPage.js",
+  "/HomePage": "pages/HomePage.js",
+  "/GalleryPage": "pages/GalleryPage.js",
+  "/HiringPage": "pages/HiringPage.js",
+  "/LoginPage": "pages/LoginPage.js",
+  "/OperatorPage": "pages/OperatorPage.js",
+  "/JoinUsPage": "pages/JoinUsPage.js",
+  "/PinToLocation": "pages/PinToLocation.js",
+  "/_document": "pages/_document.js"
+}

@@ -5,8 +5,6 @@ import { Eye, EyeOff, User, Lock, Video, Shield, Users } from 'lucide-react'
 import { useAppContext } from '@/contexts/AppContext'
 import ThemeToggle from '@/components/ThemeToggle'
 
-
-
 interface LoginPageProps {
   onLogin: (userType: 'admin' | 'operator', userData: any) => void
 }
@@ -21,9 +19,29 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   })
   const [showForm, setShowForm] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
-const [showPassword, setShowPassword] = useState(false)
-  // 🔹 Auto check localStorage when component loads
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
+  // 🔹 Auto check localStorage when component loads
+  useEffect(() => {
+    const savedId = localStorage.getItem('asan_user_id')
+    if (savedId) {
+      fetch(`/api/user/${savedId}`)
+        .then((res) => res.json())
+        .then((user) => {
+          if (user.error || !['admin', 'operator'].includes(user.role)) {
+            localStorage.removeItem('asan_user_id') // cleanup if invalid
+          } else {
+            onLogin(user.role, user) // restore session
+          }
+        })
+        .catch((err) => {
+          console.error('Auto-login failed:', err)
+          localStorage.removeItem('asan_user_id')
+        })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -32,61 +50,41 @@ const [showPassword, setShowPassword] = useState(false)
     })
   }
 
-useEffect(() => {
-  const savedId = localStorage.getItem('asan_user_id');
-  if (savedId) {
-    fetch(`/api/user/${savedId}`)
-      .then(res => res.json())
-      .then(user => {
-        if (user.error) {
-          localStorage.removeItem('asan_user_id'); // cleanup if invalid
-        } else {
-          onLogin(user.role, user); // restore session
-        }
-      })
-      .catch(err => {
-        console.error("Auto-login failed:", err);
-        localStorage.removeItem('asan_user_id');
-      });
-  }
-}, []);
-
-  
   const handleLogin = async (
     uType: 'admin' | 'operator',
     creds: { userId: string; operatorId: string; password: string }
   ) => {
+    console.log(creds);
     setIsLoading(true)
+    setError(null)
+
     try {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userType: uType,
-          userId: creds.userId,
-          operatorId: creds.operatorId,
-          password: creds.password,
-        }),
+        body: JSON.stringify({ userType: uType, ...creds }),
       })
 
       const data = await res.json()
 
       if (!res.ok) {
-        alert(data.error || 'Login failed')
+        setError(data.error || 'Login failed')
         setIsLoading(false)
         return
       }
 
       // ✅ Save credentials in localStorage
-     localStorage.setItem('asan_user_id', data.id);
-
+      localStorage.setItem('asan_user_id', data.id)
 
       // ✅ Notify parent
       onLogin(uType, data)
+
+      // Optional: reset form after login
+      setFormData({ userId: '', operatorId: '', password: '' })
       setShowForm(false)
     } catch (err) {
       console.error('Login error:', err)
-      alert('Something went wrong, try again.')
+      setError('Something went wrong, try again.')
     }
     setIsLoading(false)
   }
@@ -129,118 +127,133 @@ useEffect(() => {
           </div>
 
           {/* Login Form */}
-          <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-gray-200/50 dark:border-gray-700/50">
-            {/* User Type Selection */}
-            <div className="flex bg-gray-100 dark:bg-gray-700 rounded-2xl p-1 mb-8">
-              <button
-                type="button"
-                onClick={() => setUserType('admin')}
-                className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
-                  userType === 'admin'
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                }`}
-              >
-                <Shield className="h-5 w-5" />
-                <span>Admin</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setUserType('operator')}
-                className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
-                  userType === 'operator'
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
-                    : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
-                }`}
-              >
-                <Users className="h-5 w-5" />
-                <span>Operator</span>
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {userType === 'admin' ? (
-                <div>
-                  <label htmlFor="userId" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Admin User ID
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      id="userId"
-                      name="userId"
-                      value={formData.userId}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                      placeholder="Enter admin user ID"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div>
-                  <label htmlFor="operatorId" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Operator ID
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                    <input
-                      type="text"
-                      id="operatorId"
-                      name="operatorId"
-                      value={formData.operatorId}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                      placeholder="Enter operator ID"
-                    />
-                  </div>
-                </div>
-              )}
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Password
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    id="password"
-                    name="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
-                    placeholder="Enter password"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-                  >
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
+          {showForm && (
+            <div className="bg-white/95 dark:bg-gray-800/95 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+              {/* User Type Selection */}
+              <div className="flex bg-gray-100 dark:bg-gray-700 rounded-2xl p-1 mb-8">
+                <button
+                  type="button"
+                  onClick={() => setUserType('admin')}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
+                    userType === 'admin'
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                  }`}
+                >
+                  <Shield className="h-5 w-5" />
+                  <span>Admin</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setUserType('operator')}
+                  className={`flex-1 flex items-center justify-center space-x-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${
+                    userType === 'operator'
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400'
+                  }`}
+                >
+                  <Users className="h-5 w-5" />
+                  <span>Operator</span>
+                </button>
               </div>
 
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:hover:scale-100"
-              >
-                {isLoading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Signing In...</span>
-                  </>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {userType === 'admin' ? (
+                  <div>
+                    <label
+                      htmlFor="userId"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      Admin User ID
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <input
+                        type="text"
+                        id="userId"
+                        name="userId"
+                        value={formData.userId}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                        placeholder="Enter admin user ID"
+                      />
+                    </div>
+                  </div>
                 ) : (
-                  <span>Sign In</span>
+                  <div>
+                    <label
+                      htmlFor="operatorId"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                    >
+                      Operator ID
+                    </label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                      <input
+                        type="text"
+                        id="operatorId"
+                        name="operatorId"
+                        value={formData.operatorId}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                        placeholder="Enter operator ID"
+                      />
+                    </div>
+                  </div>
                 )}
-              </button>
-            </form>
-          </div>
+
+                <div>
+                  <label
+                    htmlFor="password"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+                  >
+                    Password
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      name="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full pl-10 pr-12 py-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                      placeholder="Enter password"
+                    />
+                    <button
+                      type="button"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Error message */}
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg hover:shadow-xl transform hover:scale-105 disabled:transform-none disabled:hover:scale-100"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                      <span>Signing In...</span>
+                    </>
+                  ) : (
+                    <span>Sign In</span>
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
         </div>
       </div>
     </div>

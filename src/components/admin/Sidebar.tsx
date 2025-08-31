@@ -3,7 +3,7 @@
 import React from 'react'
 import { 
   LayoutDashboard, Users, BarChart3, Package, UserCheck, Menu, X, 
-  Calendar, ChevronLeft, Settings
+  Calendar, ChevronLeft, Settings, UserPlus
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -27,7 +27,10 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: 'team', icon: Users, label: 'Team Management', color: 'from-purple-500 to-purple-600' },
     { id: 'analysis', icon: BarChart3, label: 'Analysis', color: 'from-orange-500 to-orange-600' },
     { id: 'equipment', icon: Package, label: 'Equipment Partner', color: 'from-red-500 to-red-600' },
-    ...(userType === 'admin' ? [{ id: 'operator', icon: UserCheck, label: 'Operator', color: 'from-indigo-500 to-indigo-600' }] : [])
+    ...(userType === 'admin' ? [
+      { id: 'operator', icon: UserCheck, label: 'Operator', color: 'from-indigo-500 to-indigo-600' },
+      { id: 'createOperator', icon: UserPlus, label: 'Create Operator', color: 'from-teal-500 to-teal-600' }
+    ] : [])
   ]
 
   return (

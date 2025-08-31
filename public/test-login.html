@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AsanCapture Login Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f7fa;
+    }
+    h1 {
+      color: #3b82f6;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .test-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .test-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 10px;
+    }
+    .test-title {
+      font-weight: 600;
+      font-size: 18px;
+      color: #1f2937;
+    }
+    .test-button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    .test-button:hover {
+      background-color: #2563eb;
+    }
+    .test-button:disabled {
+      background-color: #9ca3af;
+      cursor: not-allowed;
+    }
+    .test-result {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 4px;
+      font-family: monospace;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+    .success {
+      background-color: #d1fae5;
+      border: 1px solid #10b981;
+      color: #065f46;
+    }
+    .error {
+      background-color: #fee2e2;
+      border: 1px solid #ef4444;
+      color: #b91c1c;
+    }
+    .pending {
+      background-color: #f3f4f6;
+      border: 1px solid #d1d5db;
+      color: #4b5563;
+    }
+    .input-group {
+      margin-bottom: 15px;
+    }
+    .input-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #4b5563;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .radio-option {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>AsanCapture Login Test</h1>
+  
+  <div class="test-container">
+    <div class="test-header">
+      <div class="test-title">Custom Login Test</div>
+      <button id="customTestButton" class="test-button">Run Test</button>
+    </div>
+    
+    <div class="radio-group">
+      <div class="radio-option">
+        <input type="radio" id="adminType" name="userType" value="admin" checked>
+        <label for="adminType">Admin</label>
+      </div>
+      <div class="radio-option">
+        <input type="radio" id="operatorType" name="userType" value="operator">
+        <label for="operatorType">Operator</label>
+      </div>
+    </div>
+    
+    <div id="adminFields">
+      <div class="input-group">
+        <label for="userId">Admin User ID</label>
+        <input type="text" id="userId" placeholder="Enter admin user ID">
+      </div>
+    </div>
+    
+    <div id="operatorFields" style="display: none;">
+      <div class="input-group">
+        <label for="operatorId">Operator ID</label>
+        <input type="text" id="operatorId" placeholder="Enter operator ID">
+      </div>
+    </div>
+    
+    <div class="input-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="Enter password">
+    </div>
+    
+    <div id="customTestResult" class="test-result pending">Results will appear here after running the test.</div>
+  </div>
+  
+  <div class="test-container">
+    <div class="test-header">
+      <div class="test-title">Admin Login Test (Default Credentials)</div>
+      <button id="adminTestButton" class="test-button">Run Test</button>
+    </div>
+    <div id="adminTestResult" class="test-result pending">Results will appear here after running the test.</div>
+  </div>
+  
+  <div class="test-container">
+    <div class="test-header">
+      <div class="test-title">Operator Login Test (Default Credentials)</div>
+      <button id="operatorTestButton" class="test-button">Run Test</button>
+    </div>
+    <div id="operatorTestResult" class="test-result pending">Results will appear here after running the test.</div>
+  </div>
+  
+  <div class="test-container">
+    <div class="test-header">
+      <div class="test-title">Invalid Login Test</div>
+      <button id="invalidTestButton" class="test-button">Run Test</button>
+    </div>
+    <div id="invalidTestResult" class="test-result pending">Results will appear here after running the test.</div>
+  </div>
+  
+  <script>
+    // Toggle between admin and operator fields
+    document.querySelectorAll('input[name="userType"]').forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === 'admin') {
+          document.getElementById('adminFields').style.display = 'block';
+          document.getElementById('operatorFields').style.display = 'none';
+        } else {
+          document.getElementById('adminFields').style.display = 'none';
+          document.getElementById('operatorFields').style.display = 'block';
+        }
+      });
+    });
+    
+    // Custom login test
+    document.getElementById('customTestButton').addEventListener('click', async function() {
+      const resultElement = document.getElementById('customTestResult');
+      resultElement.className = 'test-result pending';
+      resultElement.textContent = 'Running test...';
+      
+      const userType = document.querySelector('input[name="userType"]:checked').value;
+      const userId = document.getElementById('userId').value;
+      const operatorId = document.getElementById('operatorId').value;
+      const password = document.getElementById('password').value;
+      
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userType, userId, operatorId, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultElement.className = 'test-result success';
+          resultElement.textContent = `Login successful!\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        } else {
+          resultElement.className = 'test-result error';
+          resultElement.textContent = `Login failed: ${data.error}\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultElement.className = 'test-result error';
+        resultElement.textContent = `Error: ${error.message}`;
+      }
+    });
+    
+    // Admin login test
+    document.getElementById('adminTestButton').addEventListener('click', async function() {
+      const resultElement = document.getElementById('adminTestResult');
+      resultElement.className = 'test-result pending';
+      resultElement.textContent = 'Running test...';
+      
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userType: 'admin',
+            userId: 'admin1', // Replace with a valid admin ID in your database
+            password: 'admin123' // Replace with the correct password
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultElement.className = 'test-result success';
+          resultElement.textContent = `Admin login successful!\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        } else {
+          resultElement.className = 'test-result error';
+          resultElement.textContent = `Admin login failed: ${data.error}\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultElement.className = 'test-result error';
+        resultElement.textContent = `Error: ${error.message}`;
+      }
+    });
+    
+    // Operator login test
+    document.getElementById('operatorTestButton').addEventListener('click', async function() {
+      const resultElement = document.getElementById('operatorTestResult');
+      resultElement.className = 'test-result pending';
+      resultElement.textContent = 'Running test...';
+      
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userType: 'operator',
+            operatorId: 'OP001', // Replace with a valid operator ID in your database
+            password: 'operator123' // Replace with the correct password
+          })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          resultElement.className = 'test-result success';
+          resultElement.textContent = `Operator login successful!\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        } else {
+          resultElement.className = 'test-result error';
+          resultElement.textContent = `Operator login failed: ${data.error}\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultElement.className = 'test-result error';
+        resultElement.textContent = `Error: ${error.message}`;
+      }
+    });
+    
+    // Invalid login test
+    document.getElementById('invalidTestButton').addEventListener('click', async function() {
+      const resultElement = document.getElementById('invalidTestResult');
+      resultElement.className = 'test-result pending';
+      resultElement.textContent = 'Running test...';
+      
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userType: 'admin',
+            userId: 'invalid_user',
+            password: 'wrong_password'
+          })
+        });
+        
+        const data = await response.json();
+        
+        // For invalid login, we expect a 401 status code
+        if (!response.ok && response.status === 401) {
+          resultElement.className = 'test-result success';
+          resultElement.textContent = `Invalid login correctly rejected!\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        } else {
+          resultElement.className = 'test-result error';
+          resultElement.textContent = `Invalid login test failed - should have been rejected\n\nResponse:\n${JSON.stringify(data, null, 2)}`;
+        }
+      } catch (error) {
+        resultElement.className = 'test-result error';
+        resultElement.textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
