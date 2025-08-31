@@ -165,7 +165,16 @@ const calculateServicePrice = (bookingData: BookingData) => {
   };
 };
 
-const HiringPage: React.FC = () => {
+interface HiringPageProps {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+  mobileMenuOpen: boolean;
+  toggleMobileMenu: () => void;
+  navigateToPage: (page: string) => void;
+  currentPage: string;
+}
+
+const HiringPage: React.FC<HiringPageProps> = () => {
   const [bookingData, setBookingData] =
     useState<BookingData>(initialBookingData);
 

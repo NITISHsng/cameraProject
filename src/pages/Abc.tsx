@@ -56,7 +56,17 @@ type BookingData = {
   eventTimes: EventTimeSlot[];
 };
 
-const HiringPage: React.FC = () => {
+interface HiringPageProps {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
+  mobileMenuOpen: boolean;
+  toggleMobileMenu: () => void;
+  navigateToPage: (page: string) => void;
+  currentPage: string;
+}
+
+
+const HiringPage: React.FC<HiringPageProps> = () => {
   const {
     darkMode,
     toggleDarkMode,
