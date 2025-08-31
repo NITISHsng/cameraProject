@@ -46,6 +46,7 @@ const JoinUsPage: React.FC<JoinUsPageProps> = (props) => {
   const darkMode = props.darkMode ?? context.darkMode;
   const toggleDarkMode = props.toggleDarkMode ?? context.toggleDarkMode;
   const mobileMenuOpen = props.mobileMenuOpen ?? context.mobileMenuOpen;
+  
   const toggleMobileMenu =
     props.toggleMobileMenu ??
     (() => context.setMobileMenuOpen(!context.mobileMenuOpen));

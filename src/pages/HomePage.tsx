@@ -11,7 +11,16 @@ import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import WhyChooseUs from '@/components/WhyChooseUs'
 import ThemeToggle from '@/components/ThemeToggle'
-const HomePage: React.FC = () => {
+
+interface HomePageProps {
+  darkMode?: boolean;
+  toggleDarkMode?: () => void;
+  mobileMenuOpen?: boolean;
+  toggleMobileMenu?: () => void;
+  navigateToPage?: (page: string) => void;
+  currentPage?: string;
+}
+const HomePage: React.FC<HomePageProps> = () => {
 
   const {
     mobileMenuOpen,
