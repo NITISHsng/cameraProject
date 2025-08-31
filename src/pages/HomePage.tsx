@@ -10,11 +10,10 @@ import Testimonials from '@/components/Testimonials'
 import Contact from '@/components/Contact'
 import Footer from '@/components/Footer'
 import WhyChooseUs from '@/components/WhyChooseUs'
+import ThemeToggle from '@/components/ThemeToggle'
 const HomePage: React.FC = () => {
 
   const {
-    darkMode,
-    toggleDarkMode,
     mobileMenuOpen,
     setMobileMenuOpen,
     navigateToPage,
@@ -26,11 +25,9 @@ const HomePage: React.FC = () => {
   }
 
   return (
-    <div  className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
+    <div className="min-h-screen transition-colors duration-300">
       <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
         <Header 
-          darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
           mobileMenuOpen={mobileMenuOpen}
           toggleMobileMenu={toggleMobileMenu}
           navigateToPage={navigateToPage}

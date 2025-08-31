@@ -1,7 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
 /* Hide scrollbars globally */
 * {
   scrollbar-width: none; /* Firefox */

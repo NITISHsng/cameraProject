@@ -188,8 +188,6 @@ const JoinUsPage: React.FC<JoinUsPageProps> = (props) => {
     >
       <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
         <Header
-          darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
           mobileMenuOpen={mobileMenuOpen}
           toggleMobileMenu={toggleMobileMenu}
           navigateToPage={navigateToPage}

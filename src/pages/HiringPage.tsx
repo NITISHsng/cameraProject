@@ -165,22 +165,12 @@ const calculateServicePrice = (bookingData: BookingData) => {
   };
 };
 
-interface HiringPageProps {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-  mobileMenuOpen: boolean;
-  toggleMobileMenu: () => void;
-  navigateToPage: (page: string) => void;
-  currentPage: string;
-}
 
-const HiringPage: React.FC<HiringPageProps> = () => {
+const HiringPage: React.FC = () => {
   const [bookingData, setBookingData] =
     useState<BookingData>(initialBookingData);
-
+  
   const {
-    darkMode,
-    toggleDarkMode,
     mobileMenuOpen,
     setMobileMenuOpen,
     navigateToPage,
@@ -426,14 +416,10 @@ const HiringPage: React.FC<HiringPageProps> = () => {
 
   return (
     <div
-      className={`min-h-screen transition-colors duration-300 ${
-        darkMode ? "dark" : ""
-      }`}
+      className="min-h-screen transition-colors duration-300"
     >
       <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
         <Header
-          darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
           mobileMenuOpen={mobileMenuOpen}
           toggleMobileMenu={toggleMobileMenu}
           navigateToPage={navigateToPage}

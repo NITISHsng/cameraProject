@@ -1,17 +1,18 @@
 'use client'
 
-import React, { useState ,useEffect} from 'react'
-import { Eye, EyeOff, User, Lock, Moon, Sun, Video, Shield, Users } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import { Eye, EyeOff, User, Lock, Video, Shield, Users } from 'lucide-react'
+import { useAppContext } from '@/contexts/AppContext'
+import ThemeToggle from '@/components/ThemeToggle'
 
 
 
 interface LoginPageProps {
   onLogin: (userType: 'admin' | 'operator', userData: any) => void
-  darkMode: boolean
-  toggleDarkMode: () => void
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin, darkMode, toggleDarkMode }) => {
+const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+  const { darkMode } = useAppContext()
   const [userType, setUserType] = useState<'admin' | 'operator'>('admin')
   const [formData, setFormData] = useState({
     userId: '',
@@ -106,17 +107,9 @@ useEffect(() => {
         </div>
 
         {/* Theme Toggle */}
-        <button
-          onClick={toggleDarkMode}
-          className="absolute top-6 right-6 p-3 rounded-xl bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 shadow-lg hover:shadow-xl"
-          aria-label="Toggle theme"
-        >
-          {darkMode ? (
-            <Sun className="h-6 w-6 text-yellow-500" />
-          ) : (
-            <Moon className="h-6 w-6 text-gray-600" />
-          )}
-        </button>
+        <div className="absolute top-6 right-6">
+          <ThemeToggle showLabel={false} />
+        </div>
 
         <div className="w-full max-w-md relative z-10">
           {/* Logo */}

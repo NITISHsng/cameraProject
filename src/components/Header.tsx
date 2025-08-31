@@ -1,11 +1,10 @@
 'use client'
 import Link from 'next/link'
 import React from 'react'
-import { Moon, Sun, Menu, X, Video, Camera } from 'lucide-react'
+import { Menu, X, Video, Camera } from 'lucide-react'
+import ThemeToggle from './ThemeToggle'
 
 interface HeaderProps {
-  darkMode: boolean
-  toggleDarkMode: () => void
   mobileMenuOpen: boolean
   toggleMobileMenu: () => void
   navigateToPage: (page: string) => void
@@ -13,8 +12,6 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({
-  darkMode,
-  toggleDarkMode,
   mobileMenuOpen,
   toggleMobileMenu,
   navigateToPage,
@@ -102,18 +99,7 @@ const Header: React.FC<HeaderProps> = ({
           {/* Right side buttons */}
           <div className="flex items-center space-x-4">
             {/* Theme Toggle */}
-            <button
-              onClick={toggleDarkMode}
-              className="relative p-3 rounded-xl bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 group overflow-hidden shadow-md hover:shadow-lg"
-              aria-label="Toggle theme"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-blue-900/30 dark:to-purple-900/30 scale-0 group-hover:scale-100 transition-transform duration-300 rounded-xl"></div>
-              {darkMode ? (
-                <Sun className="h-6 w-6 text-yellow-500 relative z-10 group-hover:rotate-180 transition-transform duration-500" />
-              ) : (
-                <Moon className="h-6 w-6 text-gray-600 relative z-10 group-hover:-rotate-12 transition-transform duration-300" />
-              )}
-            </button>
+            <ThemeToggle />
 
             {/* Admin Button */}
             <button 

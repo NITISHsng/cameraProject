@@ -16,16 +16,12 @@ interface OperatorPageProps {
   userType: 'admin' | 'operator'
   userData: any
   onLogout: () => void
-  darkMode: boolean
-  toggleDarkMode: () => void
 }
 
 const OperatorPage: React.FC<OperatorPageProps> = ({ 
   userType, 
   userData, 
-  onLogout, 
-  darkMode, 
-  toggleDarkMode 
+  onLogout
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [activeSection, setActiveSection] = useState('dashboard')
@@ -48,7 +44,7 @@ const OperatorPage: React.FC<OperatorPageProps> = ({
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
+    <div className="min-h-screen transition-colors duration-300">
       <div className="bg-gray-50 dark:bg-gray-900 min-h-screen flex">
         {/* Fixed Sidebar - Operator doesn't have access to Operator management */}
         <Sidebar 
@@ -65,8 +61,6 @@ const OperatorPage: React.FC<OperatorPageProps> = ({
           <Header 
             userData={userData}
             userType={userType}
-            darkMode={darkMode}
-            toggleDarkMode={toggleDarkMode}
             onLogout={onLogout}
           />
 

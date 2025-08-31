@@ -1,15 +1,15 @@
 import React from 'react';
-import { Video, Sun, Moon, LogOut, Shield } from 'lucide-react';
+import { Video, LogOut, Shield } from 'lucide-react';
+import ThemeToggle from '../ThemeToggle';
+import { useAppContext } from '@/contexts/AppContext';
 
 interface HeaderProps {
   userData: any;
   userType: 'admin' | 'operator';
-  darkMode: boolean;
-  toggleDarkMode: () => void;
   onLogout: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ userData, userType, darkMode, toggleDarkMode, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ userData, userType, onLogout }) => {
   console.log(userData);
   return (
     <header className="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 px-6 py-4">
@@ -28,17 +28,7 @@ const Header: React.FC<HeaderProps> = ({ userData, userType, darkMode, toggleDar
         {/* Right side - Theme toggle, admin info, logout */}
         <div className="flex items-center space-x-4">
           {/* Theme Toggle */}
-          <button
-            onClick={toggleDarkMode}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-            aria-label="Toggle theme"
-          >
-            {darkMode ? (
-              <Sun className="h-5 w-5 text-yellow-500" />
-            ) : (
-              <Moon className="h-5 w-5 text-gray-600" />
-            )}
-          </button>
+          <ThemeToggle />
 
           {/* Admin/Operator Logo with name/id */}
           <div className="flex items-center space-x-3 px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg">

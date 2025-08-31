@@ -2,8 +2,12 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
+type ThemeType = 'light' | 'dark' | 'system'
+
 interface AppContextType {
   darkMode: boolean
+  theme: ThemeType
+  setTheme: (theme: ThemeType) => void
   toggleDarkMode: () => void
   currentPage: string
   setCurrentPage: (page: string) => void
@@ -33,6 +37,7 @@ interface AppProviderProps {
 }
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
+  const [theme, setThemeState] = useState<ThemeType>('system')
   const [darkMode, setDarkMode] = useState(false)
   const [currentPage, setCurrentPage] = useState('home')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -40,28 +45,67 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [userType, setUserType] = useState<'admin' | 'operator'>('admin')
   const [userData, setUserData] = useState<any>(null)
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme')
-    if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setDarkMode(true)
+  // Function to apply theme to document
+  const applyTheme = (isDark: boolean) => {
+    setDarkMode(isDark)
+    if (isDark) {
       document.documentElement.classList.add('dark')
     } else {
-      setDarkMode(false)
       document.documentElement.classList.remove('dark')
+    }
+  }
+
+  // Set theme based on user preference or system preference
+  const setTheme = (newTheme: ThemeType) => {
+    setThemeState(newTheme)
+    localStorage.setItem('theme-preference', newTheme)
+    
+    if (newTheme === 'dark') {
+      applyTheme(true)
+    } else if (newTheme === 'light') {
+      applyTheme(false)
+    } else {
+      // System preference
+      applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches)
+    }
+  }
+
+  // Initialize theme from localStorage or system preference
+  useEffect(() => {
+    const savedThemePreference = localStorage.getItem('theme-preference') as ThemeType | null
+    
+    if (savedThemePreference && ['light', 'dark', 'system'].includes(savedThemePreference)) {
+      setThemeState(savedThemePreference as ThemeType)
+      
+      if (savedThemePreference === 'system') {
+        applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches)
+      } else {
+        applyTheme(savedThemePreference === 'dark')
+      }
+    } else {
+      // Default to system preference if no saved preference
+      setThemeState('system')
+      applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches)
     }
   }, [])
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode
-    setDarkMode(newDarkMode)
+  // Listen for system preference changes when theme is set to 'system'
+  useEffect(() => {
+    if (theme !== 'system') return
     
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      applyTheme(e.matches)
     }
+    
+    mediaQuery.addEventListener('change', handleChange)
+    return () => mediaQuery.removeEventListener('change', handleChange)
+  }, [theme])
+
+  const toggleDarkMode = () => {
+    const newTheme = darkMode ? 'light' : 'dark'
+    setTheme(newTheme)
   }
 
   const navigateToPage = (page: string) => {
@@ -104,6 +148,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   const value = {
     darkMode,
+    theme,
+    setTheme,
     toggleDarkMode,
     currentPage,
     setCurrentPage,

@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Video } from 'lucide-react'
 
 // Import admin components
 import Sidebar from '@/components/admin/Sidebar'
@@ -17,16 +16,12 @@ interface AdminPageProps {
   userType: 'admin' | 'operator'
   userData: any
   onLogout: () => void
-  darkMode: boolean
-  toggleDarkMode: () => void
 }
 
 const AdminPage: React.FC<AdminPageProps> = ({ 
   userType, 
   userData, 
-  onLogout, 
-  darkMode, 
-  toggleDarkMode 
+  onLogout
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [activeSection, setActiveSection] = useState('dashboard')
@@ -51,7 +46,7 @@ const AdminPage: React.FC<AdminPageProps> = ({
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
+    <div className="min-h-screen transition-colors duration-300">
       <div className="bg-gray-50 dark:bg-gray-900 min-h-screen flex">
         {/* Fixed Sidebar */}
         <Sidebar 
@@ -68,8 +63,6 @@ const AdminPage: React.FC<AdminPageProps> = ({
           <Header 
             userData={userData}
             userType={userType}
-            darkMode={darkMode}
-            toggleDarkMode={toggleDarkMode}
             onLogout={onLogout}
           />
 

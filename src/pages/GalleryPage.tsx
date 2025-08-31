@@ -103,8 +103,6 @@ What made Priya and Bipul’s wedding truly unforgettable was its simplicity and
   return (
     <section id="gallery" className="pt-16 bg-gray-50 dark:bg-gray-900">
            <Header
-          darkMode={darkMode}
-          toggleDarkMode={toggleDarkMode}
           mobileMenuOpen={mobileMenuOpen}
           toggleMobileMenu={toggleMobileMenu}
           navigateToPage={navigateToPage}
