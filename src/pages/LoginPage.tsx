@@ -52,7 +52,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     setError(null)
 
     try {
-      const res = await fetch('https://camera-start-5vz97tb3f-nitish-chandra-singhas-projects.vercel.app/api/login', {
+      const res = await fetch('https://camera-start-up.vercel.app/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include', // Important for cookies to be sent and received
