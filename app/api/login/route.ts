@@ -53,28 +53,7 @@ export async function POST(req: Request) {
       status: user.status || "active",
     });
 
-    // Optional: set cookies (for production, change sameSite/secure)
-    /*
-    const isProd = process.env.NODE_ENV === "production";
-    response.cookies.set({
-      name: "asan_user_id",
-      value: user._id.toString(),
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
-    response.cookies.set({
-      name: "asan_user_role",
-      value: user.role,
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
-    */
+
 
     return response;
   } catch (err) {

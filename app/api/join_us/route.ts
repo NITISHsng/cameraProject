@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { MongoClient } from 'mongodb';
-import { cookies } from 'next/headers';
+
 
 const uri = process.env.MONGODB_URI!;
 const client = new MongoClient(uri);
