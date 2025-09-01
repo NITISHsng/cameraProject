@@ -42,7 +42,6 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   }, [])
 
 
-
 const handleLogin = async (
   uType: 'admin' | 'operator',
   creds: { userId: string; operatorId: string; password: string }
