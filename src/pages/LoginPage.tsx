@@ -41,12 +41,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
+
 
   const handleLogin = async (
     uType: 'admin' | 'operator',
@@ -60,6 +55,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
       const res = await fetch('/api/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include', // Important for cookies to be sent and received
         body: JSON.stringify({ userType: uType, ...creds }),
       })
 
@@ -92,6 +88,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     await handleLogin(userType, formData)
   }
 
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
+  }
   return (
     <div className="min-h-screen transition-colors duration-300">
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 flex items-center justify-center p-4 relative overflow-hidden">

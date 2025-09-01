@@ -131,7 +131,8 @@ export async function POST(req: Request) {
       name: 'asan_user_id',
       value: user._id.toString(),
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
+      sameSite: 'none',
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: '/'
     });
@@ -140,7 +141,8 @@ export async function POST(req: Request) {
       name: 'asan_user_role',
       value: user.role,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
+      sameSite: 'none',
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: '/'
     });

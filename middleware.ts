@@ -35,6 +35,7 @@ export async function middleware(request: NextRequest) {
 
   // If path requires authentication but no userId cookie exists
   if (requiresAuth && !userId) {
+    console.log('Authentication required but no userId cookie found');
     const url = new URL('/', request.url);
     return NextResponse.redirect(url);
   }

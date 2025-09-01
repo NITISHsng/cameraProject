@@ -1,6 +1,5 @@
 {
-  "/api/join_us/route": "app/api/join_us/route.js",
-  "/admin/page": "app/admin/page.js",
-  "/api/user/[id]/route": "app/api/user/[id]/route.js",
-  "/api/hiring/route": "app/api/hiring/route.js"
+  "/api/login/route": "app/api/login/route.js",
+  "/api/hiring/route": "app/api/hiring/route.js",
+  "/api/join_us/route": "app/api/join_us/route.js"
 }
