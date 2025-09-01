@@ -33,37 +33,14 @@ export async function POST(req: Request) {
 
     await collection.updateOne({ _id: user._id }, { $set: { lastLogin: new Date() } });
 
-    const response = NextResponse.json({
+    // Return user info only (no cookies)
+    return NextResponse.json({
       id: user._id.toString(),
       name: user.name,
       email: user.email,
       role: user.role,
       status: user.status || "active",
     });
-
-    const isProd = process.env.NODE_ENV === "production";
-
-    response.cookies.set({
-      name: "asan_user_id",
-      value: user._id.toString(),
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
-
-    response.cookies.set({
-      name: "asan_user_role",
-      value: user.role,
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? "none" : "lax",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
-
-    return response;
   } catch (err) {
     console.error("Login error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
