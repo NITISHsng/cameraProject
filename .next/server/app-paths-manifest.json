@@ -1,17 +1,6 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/api/contact/route": "app/api/contact/route.js",
   "/api/join_us/route": "app/api/join_us/route.js",
-  "/api/hiring/route": "app/api/hiring/route.js",
-  "/api/login/route": "app/api/login/route.js",
-  "/api/operators/[id]/route": "app/api/operators/[id]/route.js",
-  "/gallery/page": "app/gallery/page.js",
-  "/api/operators/route": "app/api/operators/route.js",
-  "/join-us/page": "app/join-us/page.js",
+  "/admin/page": "app/admin/page.js",
   "/api/user/[id]/route": "app/api/user/[id]/route.js",
-  "/hiring/page": "app/hiring/page.js",
-  "/operator/page": "app/operator/page.js",
-  "/page": "app/page.js",
-  "/locationFind/page": "app/locationFind/page.js"
+  "/api/hiring/route": "app/api/hiring/route.js"
 }
