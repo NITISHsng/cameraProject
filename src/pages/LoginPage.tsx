@@ -43,45 +43,42 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
 
 
-  const handleLogin = async (
-    uType: 'admin' | 'operator',
-    creds: { userId: string; operatorId: string; password: string }
-  ) => {
-    console.log(creds);
-    setIsLoading(true)
-    setError(null)
+const handleLogin = async (
+  uType: 'admin' | 'operator',
+  creds: { userId: string; operatorId: string; password: string }
+) => {
+  setIsLoading(true);
+  setError(null);
 
-    try {
-      const res = await fetch('https://camera-start-up.vercel.app/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', // Important for cookies to be sent and received
-        body: JSON.stringify({ userType: uType, ...creds }),
-      })
+  try {
+    const res = await fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include', // Important for cookies
+      body: JSON.stringify({ userType: uType, ...creds }),
+    });
 
-      const data = await res.json()
+    const data = await res.json();
 
-      if (!res.ok) {
-        setError(data.error || 'Login failed')
-        setIsLoading(false)
-        return
-      }
-
-      // ✅ Save credentials in localStorage
-      localStorage.setItem('asan_user_id', data.id)
-
-      // ✅ Notify parent
-      onLogin(uType, data)
-
-      // Optional: reset form after login
-      setFormData({ userId: '', operatorId: '', password: '' })
-      setShowForm(false)
-    } catch (err) {
-      console.error('Login error:', err)
-      setError('Something went wrong, try again.')
+    if (!res.ok) {
+      setError(data.error || 'Login failed');
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false)
+
+    localStorage.setItem('asan_user_id', data.id);
+    onLogin(uType, data);
+
+    setFormData({ userId: '', operatorId: '', password: '' });
+    setShowForm(false);
+  } catch (err) {
+    console.error('Login error:', err);
+    setError('Something went wrong, try again.');
+  } finally {
+    setIsLoading(false);
   }
+};
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
