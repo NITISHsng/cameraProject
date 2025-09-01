@@ -1,4 +1,4 @@
-// File: C:\Users\NITISH SINGHA\Desktop\project8\app\api\join_us\route.ts
+// File: C:\Users\NITISH SINGHA\Desktop\camera project\cameraStartUp\app\api\join_us\route.ts
 import * as entry from '../../../../../app/api/join_us/route.js'
 import type { NextRequest } from 'next/server.js'
 

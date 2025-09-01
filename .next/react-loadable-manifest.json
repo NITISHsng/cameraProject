@@ -1,1 +1,56 @@
-{}
+{
+  "pages\\AdminPage.tsx -> @/components/admin/Analysis": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/Analysis",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_Analysis_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/Bookings": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/Bookings",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_Bookings_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/CreateOperator": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/CreateOperator",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_CreateOperator_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/Dashboard": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/Dashboard",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_Dashboard_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/EquipmentPartner": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/EquipmentPartner",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_EquipmentPartner_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/Header": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/Header",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_Header_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/Operator": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/Operator",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_Operator_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/Sidebar": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/Sidebar",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_Sidebar_tsx.js"
+    ]
+  },
+  "pages\\AdminPage.tsx -> @/components/admin/TeamManagement": {
+    "id": "pages\\AdminPage.tsx -> @/components/admin/TeamManagement",
+    "files": [
+      "static/chunks/_app-pages-browser_src_components_admin_TeamManagement_tsx.js"
+    ]
+  }
+}
