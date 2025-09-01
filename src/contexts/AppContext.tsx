@@ -48,17 +48,21 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   // Function to apply theme to document
   const applyTheme = (isDark: boolean) => {
     setDarkMode(isDark)
-    if (isDark) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
+    if (typeof document !== 'undefined') {
+      if (isDark) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
     }
   }
 
   // Set theme based on user preference or system preference
   const setTheme = (newTheme: ThemeType) => {
     setThemeState(newTheme)
-    localStorage.setItem('theme-preference', newTheme)
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('theme-preference', newTheme)
+    }
     
     if (newTheme === 'dark') {
       applyTheme(true)
@@ -66,12 +70,20 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       applyTheme(false)
     } else {
       // System preference
-      applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches)
+      if (typeof window !== 'undefined' && window.matchMedia) {
+        applyTheme(window.matchMedia('(prefers-color-scheme: dark)').matches)
+      } else {
+        // Default to light mode during SSR
+        applyTheme(false)
+      }
     }
   }
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
+    // Skip during SSR
+    if (typeof window === 'undefined') return;
+    
     const savedThemePreference = localStorage.getItem('theme-preference') as ThemeType | null
     
     if (savedThemePreference && ['light', 'dark', 'system'].includes(savedThemePreference)) {
@@ -91,7 +103,8 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
 
   // Listen for system preference changes when theme is set to 'system'
   useEffect(() => {
-    if (theme !== 'system') return
+    // Skip during SSR
+    if (typeof window === 'undefined' || theme !== 'system') return;
     
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
     

@@ -3,13 +3,12 @@
 import { useState } from 'react'
 import OperatorPage from '@/pages/OperatorPage'
 import LoginPage from '@/pages/LoginPage'
+import { AppProvider } from '@/contexts/AppContext'
 
 export default function Operator() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userType, setUserType] = useState<'admin' | 'operator'>('operator')
   const [userData, setUserData] = useState<any>(null)
-
-
 
   const handleLogin = (type: 'admin' | 'operator', data: any) => {
     setUserType(type)
@@ -26,17 +25,21 @@ export default function Operator() {
 
   if (!isLoggedIn) {
     return (
-      <LoginPage 
-        onLogin={handleLogin}
-      />
+      <AppProvider>
+        <LoginPage 
+          onLogin={handleLogin}
+        />
+      </AppProvider>
     )
   }
 
   return (
-    <OperatorPage 
-      userType={userType}
-      userData={userData}
-      onLogout={handleLogout}
-    />
+    <AppProvider>
+      <OperatorPage 
+        userType={userType}
+        userData={userData}
+        onLogout={handleLogout}
+      />
+    </AppProvider>
   )
 }

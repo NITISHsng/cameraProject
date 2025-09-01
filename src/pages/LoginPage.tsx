@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { Eye, EyeOff, User, Lock, Video, Shield, Users } from 'lucide-react'
-import { useAppContext } from '@/contexts/AppContext'
 import ThemeToggle from '@/components/ThemeToggle'
 
 interface LoginPageProps {
@@ -10,7 +9,6 @@ interface LoginPageProps {
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
-  const { darkMode } = useAppContext()
   const [userType, setUserType] = useState<'admin' | 'operator'>('admin')
   const [formData, setFormData] = useState({
     userId: '',
@@ -95,7 +93,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   }
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
+    <div className="min-h-screen transition-colors duration-300">
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 flex items-center justify-center p-4 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-10 dark:opacity-5">
@@ -106,7 +104,18 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
         {/* Theme Toggle */}
         <div className="absolute top-6 right-6">
-          <ThemeToggle showLabel={false} />
+          <ThemeToggle 
+            showLabel={false} 
+            theme="system" 
+            setTheme={(theme) => {
+              // Handle theme change locally if context is not available
+              if (theme === 'dark') {
+                document.documentElement.classList.add('dark')
+              } else if (theme === 'light') {
+                document.documentElement.classList.remove('dark')
+              }
+            }} 
+          />
         </div>
 
         <div className="w-full max-w-md relative z-10">

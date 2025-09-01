@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
-import { AppProvider, useAppContext } from './contexts/AppContext';
+import { AppProvider } from './contexts/AppContext';
 import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
 import HiringPage from './pages/HiringPage';
 import JoinUsPage from './pages/JoinUsPage';
 import LoginPage from './pages/LoginPage';
 
-  const {
-    mobileMenuOpen,
-    setMobileMenuOpen,
-    navigateToPage,
-    currentPage,
-  } = useAppContext();
+  // const {
+  //   mobileMenuOpen,
+  //   setMobileMenuOpen,
+  //   navigateToPage,
+  //   currentPage,
+  // } = useAppContext();
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+  // const toggleMobileMenu = () => {
+  //   setMobileMenuOpen(!mobileMenuOpen);
+  // };
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');

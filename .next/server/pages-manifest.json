@@ -1,13 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/AdminPage": "pages/AdminPage.js",
-  "/GalleryPage": "pages/GalleryPage.js",
-  "/HiringPage": "pages/HiringPage.js",
-  "/LoginPage": "pages/LoginPage.js",
-  "/HomePage": "pages/HomePage.js",
-  "/OperatorPage": "pages/OperatorPage.js",
-  "/PinToLocation": "pages/PinToLocation.js",
-  "/JoinUsPage": "pages/JoinUsPage.js",
-  "/_document": "pages/_document.js"
-}
+{"/_app":"pages/_app.js","/_error":"pages/_error.js","/_document":"pages/_document.js","/GalleryPage":"pages/GalleryPage.html","/AdminPage":"pages/AdminPage.html","/HiringPage":"pages/HiringPage.html","/HomePage":"pages/HomePage.html","/LoginPage":"pages/LoginPage.html","/JoinUsPage":"pages/JoinUsPage.html","/OperatorPage":"pages/OperatorPage.html","/PinToLocation":"pages/PinToLocation.html","/404":"pages/404.html"}

@@ -5,78 +5,22 @@ import { cookies } from 'next/headers';
 const uri = process.env.MONGODB_URI!;
 const client = new MongoClient(uri);
 
-// Get all job applications with pagination
-export async function GET(req: Request) {
+// Get ALL hiring requests (no pagination, no restrictions)
+export async function GET() {
   try {
-    // Check user role from cookies
-    const cookieStore = cookies();
-    const userRole = cookieStore.get('asan_user_role')?.value;
-    const userId = cookieStore.get('asan_user_id')?.value;
-    
-    // Only admin users can access the job applications list
-    if (userRole !== 'admin') {
-      return NextResponse.json({ error: "Unauthorized access" }, { status: 403 });
-    }
-    
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const search = searchParams.get("search") || "";
-    const role = searchParams.get("role") || "";
-    
-    const skip = (page - 1) * limit;
-    
     await client.connect();
     const db = client.db();
-    const collection = db.collection('joinUsApplicants');
-    
-    // Log the access to job applications list
-    await db.collection("auditLogs").insertOne({
-      action: "job_applications_access",
-      userId,
-      userRole,
-      filters: { search, role, page, limit },
-      timestamp: new Date(),
-      ipAddress: req.headers.get("x-forwarded-for") || "unknown"
-    });
-    
-    // Build query
-    const query: any = {};
-    
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: "i" } },
-        { email: { $regex: search, $options: "i" } },
-        { phone: { $regex: search, $options: "i" } },
-        { location: { $regex: search, $options: "i" } }
-      ];
-    }
-    
-    if (role) {
-      query.role = role;
-    }
-    
-    // Get total count for pagination
-    const total = await collection.countDocuments(query);
-    
-    // Get job applications with pagination
-    const applications = await collection.find(query)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit)
-      .toArray();
-    
-    return NextResponse.json({
-      applications,
-      pagination: {
-        total,
-        page,
-        limit,
-        totalPages: Math.ceil(total / limit)
-      }
-    });
+    const collection = db.collection("joinUsApplicants");
+
+    // Fetch all documents
+    const joinUsApplicants = await collection.find({}).sort({ createdAt: -1 }).toArray();
+
+    // Print to console (for debugging)
+    console.log("All Team Requests:", joinUsApplicants);
+
+    return NextResponse.json({ joinUsApplicants });
   } catch (err) {
-    console.error("Fetch job applications error:", err);
+    console.error("Fetch all hiring requests error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   } finally {
     await client.close();

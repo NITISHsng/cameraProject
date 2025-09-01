@@ -3,13 +3,12 @@
 import { useState } from 'react'
 import AdminPage from '@/pages/AdminPage'
 import LoginPage from '@/pages/LoginPage'
+import { AppProvider } from '@/contexts/AppContext'
 
 export default function Admin() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userType, setUserType] = useState<'admin' | 'operator'>('admin')
   const [userData, setUserData] = useState<any>(null)
-
-
 
   const handleLogin = (type: 'admin' | 'operator', data: any) => {
     setUserType(type)
@@ -26,17 +25,21 @@ export default function Admin() {
 
   if (!isLoggedIn) {
     return (
-      <LoginPage 
-        onLogin={handleLogin}
-      />
+      <AppProvider>
+        <LoginPage 
+          onLogin={handleLogin}
+        />
+      </AppProvider>
     )
   }
 
   return (
-    <AdminPage 
-      userType={userType}
-      userData={userData}
-      onLogout={handleLogout}
-    />
+    <AppProvider>
+      <AdminPage 
+        userType={userType}
+        userData={userData}
+        onLogout={handleLogout}
+      />
+    </AppProvider>
   )
 }

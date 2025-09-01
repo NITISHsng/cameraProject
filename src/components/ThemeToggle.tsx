@@ -7,13 +7,29 @@ import { Moon, Sun, Monitor } from 'lucide-react'
 interface ThemeToggleProps {
   className?: string
   showLabel?: boolean
+  theme?: 'light' | 'dark' | 'system'
+  setTheme?: (theme: 'light' | 'dark' | 'system') => void
 }
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ 
   className = '',
-  showLabel = false
+  showLabel = false,
+  theme: propTheme,
+  setTheme: propSetTheme
 }) => {
-  const { theme, setTheme } = useAppContext()
+  // Try to use props first, then fall back to context
+  let theme: 'light' | 'dark' | 'system' = 'system';
+  let setTheme: (theme: 'light' | 'dark' | 'system') => void = () => {};
+  
+  try {
+    const context = useAppContext();
+    theme = propTheme || context.theme;
+    setTheme = propSetTheme || context.setTheme;
+  } catch (error) {
+    // If context is not available, use props or defaults
+    theme = propTheme || 'system';
+    setTheme = propSetTheme || (() => {});
+  }
 
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme)

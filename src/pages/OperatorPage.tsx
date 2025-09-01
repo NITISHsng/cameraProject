@@ -1,16 +1,17 @@
 'use client'
 
-import React, { useState } from 'react'
-import { Video } from 'lucide-react'
+import React, { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
+// import { Video } from 'lucide-react'
 
-// Import admin components (reusing existing components)
-import Sidebar from '@/components/admin/Sidebar'
-import Header from '@/components/admin/Header'
-import Dashboard from '@/components/admin/Dashboard'
-import Bookings from '@/components/admin/Bookings'
-import TeamManagement from '@/components/admin/TeamManagement'
-import Analysis from '@/components/admin/Analysis'
-import EquipmentPartner from '@/components/admin/EquipmentPartner'
+// Dynamically import admin components with SSR disabled
+const Sidebar = dynamic(() => import('@/components/admin/Sidebar'), { ssr: false })
+const Header = dynamic(() => import('@/components/admin/Header'), { ssr: false })
+const Dashboard = dynamic(() => import('@/components/admin/Dashboard'), { ssr: false })
+const Bookings = dynamic(() => import('@/components/admin/Bookings'), { ssr: false })
+const TeamManagement = dynamic(() => import('@/components/admin/TeamManagement'), { ssr: false })
+const Analysis = dynamic(() => import('@/components/admin/Analysis'), { ssr: false })
+const EquipmentPartner = dynamic(() => import('@/components/admin/EquipmentPartner'), { ssr: false })
 
 interface OperatorPageProps {
   userType: 'admin' | 'operator'
@@ -25,6 +26,12 @@ const OperatorPage: React.FC<OperatorPageProps> = ({
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [activeSection, setActiveSection] = useState('dashboard')
+  const [isClient, setIsClient] = useState(false)
+  
+  // This effect runs only on the client after hydration
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const renderContent = () => {
     switch (activeSection) {
@@ -41,6 +48,18 @@ const OperatorPage: React.FC<OperatorPageProps> = ({
       default:
         return <Dashboard />
     }
+  }
+
+  // Show loading state or nothing until client-side hydration is complete
+  if (!isClient) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading operator dashboard...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

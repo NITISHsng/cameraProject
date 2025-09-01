@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { 
   Users, BarChart3, Package, UserCheck, TrendingUp, TrendingDown, 
   Search, MapPin, Phone, Mail, User, Calendar, Star, Award
@@ -10,6 +10,61 @@ const Dashboard: React.FC = () => {
   const [nameFilter, setNameFilter] = useState('');
   const [areaFilter, setAreaFilter] = useState('');
   const [pincodeFilter, setPincodeFilter] = useState('');
+
+  const [hiringRequests, setHiringRequests] = useState<any[]>([]);
+  const [ teamMember , setTeamMembers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+async function getAllHiringRequests() {
+  try {
+    const res = await fetch("/api/hiring", {
+      method: "GET",
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch hiring requests: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    console.log("All Hiring Requests:", data.hiringRequests);
+
+    setHiringRequests(data.hiringRequests || []);
+  } catch (err) {
+    console.error("Error fetching hiring requests:", err);
+  } finally {
+    setLoading(false);
+  }
+}
+async function getAllTeamMembers() {
+  try {
+    const res = await fetch("/api/join_us", {
+      method: "GET",
+      cache: "no-store",
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch hiring requests: ${res.status}`);
+    }
+
+    const data = await res.json();
+
+    console.log("All Hiring Requests:", data.joinUsApplicants);
+
+    setTeamMembers(data.joinUsApplicants || []);
+  } catch (err) {
+    console.error("Error fetching hiring requests:", err);
+  } finally {
+    setLoading(false);
+  }
+}
+
+  useEffect(() => {
+    getAllHiringRequests();
+    getAllTeamMembers();
+  }, []);
+
 
   // Mock data
   const dashboardStats = {
@@ -200,7 +255,7 @@ const Dashboard: React.FC = () => {
       </div>
 
       {/* Main Stats with Colorful Icons */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 p-6 rounded-2xl border border-blue-200 dark:border-blue-700">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -208,7 +263,7 @@ const Dashboard: React.FC = () => {
             </div>
             <TrendingUp className="h-5 w-5 text-green-500" />
           </div>
-          <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">{dashboardStats.totalClients}</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">{hiringRequests.length}</div>
           <div className="text-gray-600 dark:text-gray-300 text-sm">Total Clients</div>
         </div>
 
@@ -219,7 +274,7 @@ const Dashboard: React.FC = () => {
             </div>
             <TrendingUp className="h-5 w-5 text-green-500" />
           </div>
-          <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">{dashboardStats.totalTeamMembers}</div>
+          <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">{teamMember.length}</div>
           <div className="text-gray-600 dark:text-gray-300 text-sm">Total Team Members</div>
         </div>
 
@@ -234,7 +289,7 @@ const Dashboard: React.FC = () => {
           <div className="text-gray-600 dark:text-gray-300 text-sm">Total Projects Completed</div>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-2xl border border-orange-200 dark:border-orange-700">
+        {/* <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/20 dark:to-orange-800/20 p-6 rounded-2xl border border-orange-200 dark:border-orange-700">
           <div className="flex items-center justify-between mb-4">
             <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg">
               <Package className="h-6 w-6 text-white" />
@@ -243,7 +298,7 @@ const Dashboard: React.FC = () => {
           </div>
           <div className="text-3xl font-bold text-gray-800 dark:text-white mb-1">{dashboardStats.equipmentPartners}</div>
           <div className="text-gray-600 dark:text-gray-300 text-sm">Equipment Partners</div>
-        </div>
+        </div> */}
       </div>
 
       {/* Recent Activity */}
@@ -471,6 +526,8 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      
     </div>
     
   );
